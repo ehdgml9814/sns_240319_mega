@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html 
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/defaultLayout}">
+<section layout:fragment="content" class="contents d-flex justify-content-center">
+	<div>
+		<div class="border">
+			<textarea class="border-0" rows="3" cols="60">내용을 입력해주세요</textarea>
+			<div class="d-flex justify-content-between">
+				<img src="#" alt="이미지">
+				<button type="button" class="btn btn-info">게시</button>
+			</div>
+		</div>
+		<div class="border mt-4">
+			<div class="d-flex justify-content-between">
+				<div>marobiana</div>
+				<img src="#">
+			</div>
+			<div>
+				<img src="#" width="450">
+			</div>
+			<div>
+				
+			</div>
+			댓글
+			<hr>
+			<div>
+				abc
+			</div>
+			<hr>
+			<div class="d-flex justify-content-between">
+				<input type="text" class="form-control col-9 border-0" placeholder="댓글 달기">
+				<button type="button" class="btn btn-light">게시</button>
+			</div>
+		</div>
+	</div>
+</section>
+
+<th:block layout:fragment="script">
+    <script>
+
+    </script>
+</th:block>
