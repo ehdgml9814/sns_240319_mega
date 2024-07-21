@@ -96,16 +96,84 @@
 			
 			// 이미지 파일이 선택될 때 + 유효성 체크, 파일 이름 나타내기
 			$("#file").on('change', function(e) {
+				// 파일을 선택하지 않고 취소를 눌렀을 때(파일이 비워지므로 name을 갖고 올 수 없음)
+				let file = e.target.files[0]; // 취소 시 null 
+				if (file == null) {
+					$("#file").val("");
+					$("#fileName").text("");
+					return;
+				}
+				
 				// alert("이미지 선택");
 				let fileName = e.target.files[0].name; // e.target - change로 잡은 것
 				// leaf-8867169_1280.jpg
 				console.log(fileName);
+				
+				// 1. 확장자 validation
+				let ext = fileName.split(".").pop().toLowerCase();
+				console.log(ext);
+				
+				if (ext != "jpg" && ext != "gif" && ext != "png") {
+					alert("이미지 파일만 업로드 할 수 있습니다.");
+					// file에 선택된 진짜 파일과 텍스트로 써진 파일 이름 전부 초기화해야함
+					$("#file").val(""); // 파일 초기화
+					$("#fileName").text(""); // 텍스트 파일명 초기화
+					return;
+				}
+				
+				// 2. 파일명 나타내기
+				$("#fileName").text(fileName);
 			});
 			
 			$("#writeBtn").on('click', function() {
 				// alert("글쓰기");
-				let text = $("#writeTextArea").val().trim();
-				console.log(text);
+				let content = $("#writeTextArea").val();
+				let file = $("#file").val();
+				if (file == "") {
+					alert("파일을 업로드 해주세요");
+					return;
+				}
+				
+				// 파일 유효성 검사
+				let ext = file.split(".").pop();
+				if (ext != "jpg" && ext != "gif" && ext != "png") {
+					alert("이미지 파일만 업로드 할 수 있습니다.");
+					$("#file").val("");
+					return;
+				}
+				
+				let formData = new FormData();
+				/* if (content) {
+					formData.append("content", content);
+				} */
+				formData.append("content", content);
+				formData.append("file", $("#file")[0].files[0]);
+				
+				// AJAX
+				$.ajax({
+					// request
+					type:"post"
+					, url:"/post/create"
+					, data:formData
+					, enctype:"multipart/form-data"
+					, processData:false
+					, contentType:false
+					
+					// response
+					, success:function(data) {
+						if (data.code == 200) {
+							location.reload();
+						} else  if (data.code == 403) {
+							alert(data.error_message);
+							location.href = "/user/sign-in-view";
+						} else {
+							alert(data.error_message);
+						}
+					}
+					, error:function(error) {
+						alert("글 저장에 실패했습니다.");
+					}
+				});
 			});
 			
 			
