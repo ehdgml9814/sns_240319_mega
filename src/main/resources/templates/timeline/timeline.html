@@ -11,12 +11,13 @@
 			
 			<div class="d-flex justify-content-between">
 				<div class="file-upload d-flex">
-					<!-- file 태그를 숨겨두고 이미지를 클릭하면 파일을 클릭한 것과 같은 효과를 준다. -->
+					<!-- file 태그를 숨겨두고 이미지를 클릭하면 파일을 클릭한 것과 같은 효과를 준다.(이벤트로 잡기) -->
 					<input type="file" id="file" accept=".jpg, .png, .gif" class="d-none">
 				
 					<!-- 이미지에 마우스 올리면 마우스 커서가 link로 변경 -->
 					<a href="#" id="fileUploadBtn"><img width="35" src="https://cdn4.iconfinder.com/data/icons/ionicons/512/icon-image-512.png"></a>
 					
+					<!-- 숨겨진 파일 이름 -->
 					<div id="fileName" class="ml-2"></div>
 				</div>
 				<button id="writeBtn" class="btn btn-info">게시</button>
@@ -87,11 +88,27 @@
 <th:block layout:fragment="script">
     <script>
 		$(document).ready(function() {
+			$("#fileUploadBtn").on('click', function(e) {
+				e.preventDefault(); // 위로 올라가는 현상 방지
+				// alert("클릭");
+				$("#file").click(); // input type="file" 클릭한것과 동일한 효과
+			});
+			
+			// 이미지 파일이 선택될 때 + 유효성 체크, 파일 이름 나타내기
+			$("#file").on('change', function(e) {
+				// alert("이미지 선택");
+				let fileName = e.target.files[0].name; // e.target - change로 잡은 것
+				// leaf-8867169_1280.jpg
+				console.log(fileName);
+			});
+			
 			$("#writeBtn").on('click', function() {
 				// alert("글쓰기");
 				let text = $("#writeTextArea").val().trim();
 				console.log(text);
 			});
+			
+			
 		});
     </script>
 </th:block>
