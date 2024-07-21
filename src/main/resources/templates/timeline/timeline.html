@@ -77,7 +77,7 @@
 					<!-- 댓글 쓰기 -->
 					<div class="comment-write d-flex border-top mt-2">
 						<input type="text" class="comment-input form-control border-0 mr-2" placeholder="댓글 달기">
-						<button type="button" class="comment-btn btn btn-light">게시</button>
+						<button type="button" class="comment-btn btn btn-light" th:data-post-id="${post.id}" th:data-user-id="${session.userId}">게시</button>
 					</div>
 				</div> <!-- 댓글 끝 -->
 			</div> <!-- 카드 끝 -->
@@ -176,7 +176,54 @@
 				});
 			});
 			
-			
+			// 댓글 게시 버튼 클릭
+			$(".comment-btn").on('click', function() {
+				
+				let userId = $(this).data("user-id");
+				// alert(userId);
+				if (!userId) { // 비 로그인 상태
+					alert("로그인을 해주세요.");
+					location.href = "/user/sign-in-view";
+					return;			
+				}
+				
+				// alert("게시 버튼 클릭");
+				let postId = $(this).data("post-id");
+				// alert(postId);
+				// console.log(postId);
+				
+				// 1) 이전 태그 값 가져오기
+				// let content = $(this).prev().val().trim();
+				
+				// 2) 형제 태그 중 input 값 가져오기
+				let content = $(this).siblings("input").val().trim();
+				console.log(postId);
+				console.log(content);
+				
+				if (!content) {
+					alert("댓글을 입력하세요.");
+					return;
+				}
+				
+				$.ajax({
+					type:"post"
+					, url:"/comment/create"
+					, data:{"postId":postId, "content":content}
+					, success:function(data) {
+						if (data.code == 200) {
+							location.reload();
+						} else if (data.code == 403) { // 비 로그인 
+							alert(data.error_message);
+							location.href = "/user/sign-in-view";
+						} else {
+							alert(data.error_message);
+						}
+					}
+					, error:function(error) {
+						alert("댓글 쓰기에 실패했습니다.");
+					}
+				});
+			});
 		});
     </script>
 </th:block>
