@@ -46,8 +46,11 @@
 				
 				<!-- 좋아요 -->
 				<div class="card-like m-3">
-					<img src="https://www.iconninja.com/files/214/518/441/heart-icon.png" width="18" height="18" alt="empty heart">
-					<span th:text="|좋아요 13개|"></span>
+					<a href="#" class="like-btn" th:data-post-id="${card.post.id}">
+						<img src="https://www.iconninja.com/files/214/518/441/heart-icon.png" width="18" height="18" alt="empty heart">
+						<img src="https://www.iconninja.com/files/527/809/128/heart-icon.png" width="18" height="18" alt="empty heart">
+					</a>
+					<span th:text="${card.likeCount}"></span>
 				</div>
 				
 				<!-- 글 -->
@@ -225,6 +228,7 @@
 				});
 			});
 			
+			// 댓글 삭제
 			$(".comment-del-btn").on('click', function(e) {
 				e.preventDefault();
 				
@@ -245,6 +249,29 @@
 					}
 					, error:function(error) {
 						alert("오류가 발생했습니다.");
+					}
+				});
+			});
+			
+			// 좋아요 누르기
+			$(".like-btn").on('click', function(e) {
+				e.preventDefault();
+				
+				let postId = $(this).data("post-id");
+				
+				$.ajax({
+					url:"/like/" + postId
+					
+					, success:function(data) {
+						if (data.code == 200) {
+							location.reload();
+						} else if (data.code == 403){
+							alert(data.error_message);
+							location.href = "/user/sign-in-view";
+						}
+					}
+					, error:function(error) {
+						alert("좋아요 표시 중 오류가 발생했습니다.");
 					}
 				});
 			});
