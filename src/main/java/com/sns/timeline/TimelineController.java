@@ -7,26 +7,25 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
-import com.sns.post.bo.PostBO;
-import com.sns.post.entity.PostEntity;
+import com.sns.timeline.bo.TimelineBO;
+import com.sns.timeline.domain.CardView;
 
 import jakarta.servlet.http.HttpSession;
 
 @Controller
 public class TimelineController {
-
-	@Autowired
-	private PostBO postBO;
 	
+	@Autowired 
+	private TimelineBO timelineBO;
+
 	@GetMapping("/timeline/timeline-view")
 	public String timelineView(HttpSession session, Model model) {
-//		if (session.getAttribute("userId") == null) {
-//			return "redirect:/user/sign-in-view";
-//		}
+//		List<PostEntity> postList = postBO.getPostEntityList();
+//		
+		List<CardView> cardViewList = timelineBO.generateCardViewList();
 		
-		List<PostEntity> postList = postBO.getPostEntityList();
-		
-		model.addAttribute("postList", postList);
+//		model.addAttribute("postList", postList);
+		model.addAttribute("cardViewList", cardViewList);
 		
 		return "timeline/timeline";
 	}

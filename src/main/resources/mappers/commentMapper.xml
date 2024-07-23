@@ -21,4 +21,26 @@
 			, NOW()
 		)
 	</insert>
+	
+	<select id="selectCommentListByPostId" parameterType="int" resultType="com.sns.comment.domain.Comment">
+		SELECT
+			`id`
+			, `userId`
+			, `postId`
+			, `content`
+			, `createdAt`
+			, `updatedAt`
+		FROM
+			`comment`
+		WHERE 
+			`postId` = #{postId}
+	</select>
+	
+	<delete id="deleteCommentById" parameterType="int">
+		DELETE
+		FROM
+			`comment`
+		WHERE
+			`id` = #{Id}
+	</delete>
 </mapper>
