@@ -34,7 +34,7 @@
 					<span class="font-weight-bold" th:text="${card.user.loginId}">글쓴이</span>
 					
 					<!-- 더보기 ...(로그인 된 사람과 글쓴이 정보 일치할 때 보이게) -->
-					<a th:if="${session.userId == card.user.id}" href="#" class="more-btn">
+					<a th:if="${session.userId == card.user.id}" href="#" class="more-btn" th:data-post-id="${card.post.id}" data-toggle="modal" data-target="#Modal">
 						<img src="https://www.iconninja.com/files/860/824/939/more-icon.png" width="30">
 					</a>
 				</div>
@@ -85,6 +85,21 @@
 				</div> <!-- 댓글 끝 -->
 			</div> <!-- 카드 끝 -->
 		</div> <!-- 타임라인 박스 끝 -->
+
+		<!-- Modal: 타임리프 레이아웃 때문에 section 영역을 벗어나면 안됨 -->
+		<div class="modal fade" id="Modal">
+			<!-- modal-sm: 작은 모달 창, modal-dialog-centered: 수직 가운데 정렬 -->
+			<div class="modal-dialog modal-sm modal-dialog-centered">
+				<div class="modal-content text-center">
+					<div class="py-3">
+						<a href="#" id="postDeleteBtn">삭제하기</a>
+					</div>
+					<div class="py-3 border-top">
+						<a href="#" data-dismiss="modal">취소</a>
+					</div>
+				</div>
+			</div>
+		</div>
 	</div>
 </section>
 
@@ -272,6 +287,44 @@
 					}
 					, error:function(error) {
 						alert("좋아요 표시 중 오류가 발생했습니다.");
+					}
+				});
+			});
+			
+			// 더보기(...) 클릭 => modal 띄움, modal에 글 번호 심기
+			$(".more-btn").on('click', function(e) {
+				e.preventDefault();
+				
+				let postId = $(this).data("post-id");
+				// alert(postId);
+				
+				// 1개만 존재하는  modal을 재활용하기 위해 data-post-id를 심는다
+				$("#Modal").data("post-id", postId); // modal에 postId setting
+				// alert($("#Modal").data("post-id"));
+			});
+			
+			// modal 안에 있는 삭제하기 클릭해서 글 삭제
+			$("#postDeleteBtn").on('click', function(e) {
+				e.preventDefault();
+				
+				let postId = $("#Modal").data("post-id"); // modal에 넣어놨기 때문에 this 안됨
+				// alert(postId);
+				
+				$.ajax({
+					type:"delete"
+					, url:"/post/delete"
+					, data:{"postId":postId}
+				
+					, success:function(data) {
+						if (data.code == 200) {
+							location.reload();
+						} else {
+							alert(data.error_message);
+							location.href = "/user/sign-in-view";
+						}
+					}
+					, error:function(error) {
+						alert("글 삭제 중 오류가 발생했습니다.");
 					}
 				});
 			});

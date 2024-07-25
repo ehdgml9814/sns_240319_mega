@@ -51,9 +51,17 @@ public class CommentBO {
 		
 		return commentViewList;
 	}
+	
 	// input: commentId
 	// output: X
 	public void deleteCommentById(int id) {
 		commentMapper.deleteCommentById(id);
+	}
+	
+	// 글  id로 댓글 삭제
+	// input: postId
+	// output: X
+	public void deleteCommentsByPostId(int postId) {
+		commentMapper.deleteCommentsByPostId(postId);
 	}
 }

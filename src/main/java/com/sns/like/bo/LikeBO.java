@@ -51,4 +51,9 @@ public class LikeBO {
 		
 		return likeMapper.selectLikeCountByPostIdOrUserId(postId, userId) == 1 ? true : false;
 	}
+	
+	// 글 id로 글 삭제
+	public void deleteLikesByPostId(int postId) {
+		likeMapper.deleteLikesByPostId(postId);
+	}
 }

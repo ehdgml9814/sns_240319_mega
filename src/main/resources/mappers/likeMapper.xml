@@ -58,4 +58,11 @@
 			`postId` = #{postId}
 	</select>
 	
+	<delete id="deleteLikesByPostId" parameterType="int">
+		DELETE
+		FROM
+			`like`
+		WHERE
+			`postId` = #{postId}
+	</delete>
 </mapper>
